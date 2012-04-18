@@ -4,3 +4,9 @@
 	background-repeat: no-repeat;
 	padding-bottom: 50px;
 }
+
+.elgg-list .infinite-scroll-bottom {
+	color: #666;
+	text-align: center;
+	padding: 1.5em;
+}

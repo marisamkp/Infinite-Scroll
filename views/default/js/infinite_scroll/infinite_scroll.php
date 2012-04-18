@@ -30,8 +30,9 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 				offset: '100%',
 			});
 			$list.append($(data).children());
+		} else {
+			$list.append('<li class="infinite-scroll-bottom">'+elgg.echo('infinite_scroll:list_bottom')+'</li>');
 		}
-		
 	});
 }
 
