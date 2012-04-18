@@ -11,8 +11,7 @@ elgg.provide('elgg.infinite_scroll');
 elgg.infinite_scroll.load_next = function(event, direction) {
 	$list = $(this).parent();
 	$(this).waypoint('remove');
-	
-	$list.toggleClass('infinite-scroll-ajax-loading');
+	$list.toggleClass('infinite-scroll-ajax-loading', true);
 	
 	$params = elgg.parse_str(elgg.parse_url(location.href).query);
 	$params = $.extend($params, {
@@ -25,19 +24,24 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 	
 	url = "/ajax/view/infinite_scroll/list?" + $.param($params);
 	elgg.get(url, function(data) {
+		$list.toggleClass('infinite-scroll-ajax-loading', false);
 		if (data) {
 			$list.find(" > li:last").waypoint(elgg.infinite_scroll.load_next, {
 				offset: '100%',
 			});
 			$list.append($(data).children());
 		}
-		$list.toggleClass('infinite-scroll-ajax-loading');
+		
 	});
 }
 
-elgg.infinite_scroll.init = function() {	
-	$('.elgg-pagination').hide();
-	$('.elgg-list').find(' > li:first').waypoint(elgg.infinite_scroll.load_next, {
+elgg.infinite_scroll.init = function() {
+	
+	// Select all paginated .elgg-list near a .elgg-pagination, and hide pagination
+	$('.elgg-pagination').hide().siblings('.elgg-list')
+	
+	// When first list item is reached, begin loading the next page via ajax
+	.find(' > li:first').waypoint(elgg.infinite_scroll.load_next, {
 		offset: '100%',
 	});
 };
