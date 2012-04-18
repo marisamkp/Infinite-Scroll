@@ -12,6 +12,8 @@ elgg_register_event_handler('init', 'system', 'infinite_scroll_init');
  *
  */
 function infinite_scroll_init() {
+	
+	elgg_register_ajax_view('infinite_scroll/list');
 
 	// Extend the main css view
 	elgg_extend_view('css/elgg', 'infinite_scroll/css');
