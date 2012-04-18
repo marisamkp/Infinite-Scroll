@@ -11,7 +11,7 @@ $out = ob_get_contents();
 ob_end_clean();
 
 $json = json_decode($out);
-switch(get_input('list_type')){
+switch(get_input('items_type')){
 	case 'entity':
 		foreach ($json as $child) foreach ($child as $grandchild) $json = $grandchild;
 		break;
@@ -23,16 +23,27 @@ switch(get_input('list_type')){
 		break;
 }
 
-
-
 $items = array();
 foreach($json as $item) {
-	switch(get_input('list_type')) {
+	switch(get_input('items_type')) {
 		case 'entity':
-			$items[] = get_entity($item->guid);
+			switch($item->type) {
+				case 'site':
+					$items[] = new ElggSite($item);
+					break;
+				case 'user':
+					$items[] = new ElggUser($item);
+					break;
+				case 'group':
+					$items[] = new ElggGroup($item);
+					break;
+				case 'object':
+					$items[] = new ElggObject($item);
+					break;
+			}
 			break;
 		case 'annotation': 
-			//TODO $items[] = new ElggAnnotation($item->id);
+			//TODO $items[] = new ElggAnnotation($item);
 			break;
 		case 'river':
 			$items[] = new ElggRiverItem($item);

@@ -12,10 +12,12 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 	$list = $(this).parent();
 	$(this).waypoint('remove');
 	
+	$list.toggleClass('infinite-scroll-ajax-loading');
+	
 	$params = elgg.parse_str(elgg.parse_url(location.href).query);
 	$params = $.extend($params, {
 		path: elgg.parse_url(location.href).path,
-		list_type: $list.hasClass('elgg-list-entity') ? 'entity' :
+		items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
 					$list.hasClass('elgg-list-river') ? 'river' :
 					$list.hasClass('elgg-list-annotation') ? 'annotation' : false,
 		offset: $list.children().length + (parseInt($params.offset) || 0),
@@ -29,13 +31,13 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 			});
 			$list.append($(data).children());
 		}
+		$list.toggleClass('infinite-scroll-ajax-loading');
 	});
 }
 
 elgg.infinite_scroll.init = function() {	
-	//$('.elgg-pagination').hide();
-	$('.elgg-list')
-	.find(' > li:first').waypoint(elgg.infinite_scroll.load_next, {
+	$('.elgg-pagination').hide();
+	$('.elgg-list').find(' > li:first').waypoint(elgg.infinite_scroll.load_next, {
 		offset: '100%',
 	});
 };
