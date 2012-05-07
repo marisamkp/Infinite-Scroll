@@ -1,3 +1,0 @@
-[submodule "vendors/jquery-waypoints"]
-	path = vendors/jquery-waypoints
-	url = git://github.com/imakewebthings/jquery-waypoints.git
