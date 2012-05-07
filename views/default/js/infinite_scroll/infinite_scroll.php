@@ -9,8 +9,8 @@
 elgg.provide('elgg.infinite_scroll');
 
 elgg.infinite_scroll.load_next = function(event, direction) {
-	$list = $(this).parent();
 	$(this).waypoint('remove');
+	$list = $(this).parent();
 	$list.toggleClass('infinite-scroll-ajax-loading', true);
 	
 	$params = elgg.parse_str(elgg.parse_url(location.href).query);
@@ -19,17 +19,18 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 		items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
 					$list.hasClass('elgg-list-river') ? 'river' :
 					$list.hasClass('elgg-list-annotation') ? 'annotation' : false,
-		offset: $list.children().length + (parseInt($params.offset) || 0),
+		offset: $list.children().length + (parseInt($params.offset) || 0)
 	});
 	
 	url = "/ajax/view/infinite_scroll/list?" + $.param($params);
 	elgg.get(url, function(data) {
 		$list.toggleClass('infinite-scroll-ajax-loading', false);
 		if (data) {
-			$list.find(" > li:last").waypoint(elgg.infinite_scroll.load_next, {
+			$last = $list.find(" > li:last");
+			$list.append($(data).children());
+			$last.waypoint(elgg.infinite_scroll.load_next, {
 				offset: '100%',
 			});
-			$list.append($(data).children());
 		} else {
 			$list.append('<li class="infinite-scroll-bottom">'+elgg.echo('infinite_scroll:list_bottom')+'</li>');
 		}
