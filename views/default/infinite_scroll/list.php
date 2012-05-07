@@ -30,7 +30,13 @@ switch(get_input('items_type')){
 		
 		break;
 	case 'annotation': 
-		//TODO
+		foreach ($json as $child) {
+			$json = $child;
+		}
+		$json = elgg_get_annotations(array(
+			'items' => $json->guid,
+			'offset' => get_input('offset'),
+		));
 		break;
 	case 'river':
 		$json = $json->activity;
@@ -57,7 +63,7 @@ foreach($json as $item) {
 			}
 			break;
 		case 'annotation': 
-			//TODO $items[] = new ElggAnnotation($item);
+			$items = $json;
 			break;
 		case 'river':
 			$items[] = new ElggRiverItem($item);
