@@ -39,8 +39,11 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 
 elgg.infinite_scroll.init = function() {
 	
-	// Select all paginated .elgg-list near a .elgg-pagination, and hide pagination
-	$('.elgg-pagination').hide().siblings('.elgg-list')
+	// Select all paginated .elgg-list near a .elgg-pagination and not into widget
+	$('.elgg-pagination').siblings('.elgg-list').filter(':not(.elgg-module *)')
+	
+	// Hide pagination
+	.siblings('.elgg-pagination').hide().end()
 	
 	// When first list item is reached, begin loading the next page via ajax
 	.find(' > li:first').waypoint(elgg.infinite_scroll.load_next, {
