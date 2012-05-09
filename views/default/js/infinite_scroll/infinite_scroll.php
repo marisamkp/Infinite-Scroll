@@ -25,13 +25,18 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 	url = "/ajax/view/infinite_scroll/list?" + $.param($params);
 	elgg.get(url, function(data) {
 		$list.toggleClass('infinite-scroll-ajax-loading', false);
-		if (data) {
+		if (data && $(data).children().length == $list.data('infinite-scroll-limit')) {
 			$last = $list.find(" > li:last");
 			$list.append($(data).children());
 			$last.waypoint(elgg.infinite_scroll.load_next, {
 				offset: '100%',
 			});
-		} else {
+			list_bottom = false;
+		} else if (data) {
+			$list.append($(data).children());
+			list_bottom = true;
+		}
+		if (!data || list_bottom) {
 			$list.append('<li class="infinite-scroll-bottom">'+elgg.echo('infinite_scroll:list_bottom')+'</li>');
 		}
 	});
@@ -44,6 +49,11 @@ elgg.infinite_scroll.init = function() {
 	
 	// Hide pagination
 	.siblings('.elgg-pagination').hide().end()
+	
+	// Set limit as HTML5 data attribute
+	.each(function(){
+		$(this).data('infinite-scroll-limit', $(this).children().length);
+	})
 	
 	// When first list item is reached, begin loading the next page via ajax
 	.find(' > li:first').waypoint(elgg.infinite_scroll.load_next, {

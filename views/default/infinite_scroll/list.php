@@ -36,6 +36,7 @@ switch(get_input('items_type')){
 		$json = elgg_get_annotations(array(
 			'items' => $json->guid,
 			'offset' => get_input('offset'),
+			'limit' => 25,
 		));
 		break;
 	case 'river':
