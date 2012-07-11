@@ -19,19 +19,20 @@ switch(get_input('items_type')){
 	case 'entity':
 		foreach ($json as $child) foreach ($child as $grandchild) $json = $grandchild;
 		
-		// Removing duplicates
-		// This will be unnecessary when #4504 fixed.
-		$buggy = $json;
-		$json = array();
-		$guids = array();
-		foreach($buggy as $item) {
-			$guids[] = $item->guid;
+		/* Removing duplicates
+		   This is unnecessary when #4504 is fixed. */
+		if (version_compare(get_version(true), '1.8.7', '<')) {
+			$buggy = $json;
+			$json = array();
+			$guids = array();
+			foreach ($buggy as $item) {
+				$guids[] = $item->guid;
+			}
+			$guids = array_unique($guids);
+			foreach (array_keys($guids) as $i) {
+				$json[$i] = $buggy[$i];
+			}
 		}
-		$guids = array_unique($guids);
-		foreach(array_keys($guids) as $i) {
-			$json[$i] = $buggy[$i];
-		}
-		
 		break;
 	case 'annotation': 
 		foreach ($json as $child) {
