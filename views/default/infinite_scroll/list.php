@@ -3,6 +3,10 @@
 $path = explode('/', $vars['path']);
 array_shift($path);
 
+if ($is_gallery = get_input('list_type')) {
+	set_input('list_type', 'list');
+}
+
 ob_start();
 elgg_set_viewtype('json');
 page_handler(array_shift($path), implode('/', $path));
@@ -72,4 +76,9 @@ foreach($json as $item) {
 	}
 }
 header('Content-type: text/plain');
-echo elgg_view('page/components/list', array("items" => $items));
+if (!$is_gallery) {
+	echo elgg_view('page/components/list', array("items" => $items));
+} else {
+	echo elgg_view('page/components/gallery', array("items" => $items));
+}
+

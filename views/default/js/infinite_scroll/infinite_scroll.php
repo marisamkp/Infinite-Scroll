@@ -17,6 +17,7 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 	$params = $.extend($params, {
 		path: elgg.parse_url(location.href).path,
 		items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
+					$list.hasClass('elgg-gallery') ? 'entity' :
 					$list.hasClass('elgg-list-river') ? 'river' :
 					$list.hasClass('elgg-list-annotation') ? 'annotation' : false,
 		offset: $list.children().length + (parseInt($params.offset) || 0)
@@ -45,7 +46,7 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 elgg.infinite_scroll.init = function() {
 	
 	// Select all paginated .elgg-list near a .elgg-pagination and not into widget
-	$('.elgg-pagination').siblings('.elgg-list').filter(':not(.elgg-module *)')
+	$('.elgg-pagination').siblings('.elgg-list, .elgg-gallery').filter(':not(.elgg-module *)')
 	
 	// Hide pagination
 	.siblings('.elgg-pagination').hide().end()
