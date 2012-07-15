@@ -9,11 +9,15 @@
 elgg.provide('elgg.infinite_scroll');
 
 elgg.infinite_scroll.load_next = function(event, direction) {
-	$(this).waypoint('remove');
-	$list = $(this).parent();
-	$list.toggleClass('infinite-scroll-ajax-loading', true);
+	var $bottom = $(this).parent();
+	elgg.infinite_scroll.bottom = $bottom;
 	
-	$params = elgg.parse_str(elgg.parse_url(location.href).query);
+	$bottom.addClass('elgg-infinite-scroll-ajax-loading')
+		.find('.elgg-button').css('visibility', 'hidden');
+	
+	var $list = $bottom.siblings('.elgg-list, .elgg-gallery');
+
+	var $params = elgg.parse_str(elgg.parse_url(location.href).query);
 	$params = $.extend($params, {
 		path: elgg.parse_url(location.href).path,
 		items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
@@ -23,43 +27,51 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 		offset: $list.children().length + (parseInt($params.offset) || 0)
 	});
 	
-	url = "/ajax/view/infinite_scroll/list?" + $.param($params);
-	elgg.get(url, function(data) {
-		$list.toggleClass('infinite-scroll-ajax-loading', false);
-		if (data && $(data).children().length == $list.data('infinite-scroll-limit')) {
-			$last = $list.find(" > li:last");
-			$list.append($(data).children());
-			$last.waypoint(elgg.infinite_scroll.load_next, {
-				offset: '100%',
-			});
-			list_bottom = false;
-		} else if (data) {
-			$list.append($(data).children());
-			list_bottom = true;
+	var url = "/ajax/view/infinite_scroll/list?" + $.param($params);
+	elgg.get(url, elgg.infinite_scroll.append);
+	return false;
+}
+
+elgg.infinite_scroll.append = function(data) {
+	var $bottom = elgg.infinite_scroll.bottom;
+	$bottom.removeClass('elgg-infinite-scroll-ajax-loading');
+	var $list = $bottom.siblings('.elgg-list, .elgg-gallery');
+	
+	if (data) {
+		$list.append($(data).children());
+		if ($(data).children().length == $list.data('elgg-infinite-scroll-limit')) {
+			$bottom.find('.elgg-button').css('visibility', 'visible');
 		}
-		if (!data || list_bottom) {
-			$list.append('<li class="infinite-scroll-bottom">'+elgg.echo('infinite_scroll:list_bottom')+'</li>');
-		}
-	});
+	}
 }
 
 elgg.infinite_scroll.init = function() {
 	
 	// Select all paginated .elgg-list near a .elgg-pagination and not into widget
-	$('.elgg-pagination').siblings('.elgg-list, .elgg-gallery').filter(':not(.elgg-module *)')
+	$list = $('.elgg-pagination').siblings('.elgg-list, .elgg-gallery').filter(':not(.elgg-module *)')
 	
 	// Hide pagination
 	.siblings('.elgg-pagination').hide().end()
 	
 	// Set limit as HTML5 data attribute
 	.each(function(){
-		$(this).data('infinite-scroll-limit', $(this).children().length);
+		$(this).data('elgg-infinite-scroll-limit', $(this).children().length);
 	})
 	
-	// When first list item is reached, begin loading the next page via ajax
-	.find(' > li:first').waypoint(elgg.infinite_scroll.load_next, {
-		offset: '100%',
-	});
+	// Add load more button at the final of the list
+	.parent().append(
+		$('<div class="elgg-infinite-scroll-bottom"></div>')
+		.append(
+			$('<?php
+				echo elgg_view('output/url', array(
+					'text' => elgg_echo('infinite_scroll:load_more'),
+					'href' => '',
+					'class' => 'elgg-button',
+				)); 
+			?>').click(elgg.infinite_scroll.load_next)
+		)
+	);
+	
 };
 
 elgg.register_hook_handler('init', 'system', elgg.infinite_scroll.init);
