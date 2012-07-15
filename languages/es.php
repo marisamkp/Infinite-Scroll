@@ -6,7 +6,7 @@
  */
 
 $spanish = array(
-	'infinite_scroll:list_bottom' => "Has alcanzado el final de la lista, no hay más elementos a mostrar.",
+	'infinite_scroll:list_end' => "Has alcanzado el final de la lista, no hay más elementos a mostrar.",
 	'infinite_scroll:settings:pagination_type' => "Que tipo de paginación te gusta?",
 	'infinite_scroll:settings:pagination:classic' => 'Clássica',
 	'infinite_scroll:settings:pagination:button' => 'Cargar página con un botón',

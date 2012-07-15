@@ -37,11 +37,16 @@ elgg.infinite_scroll.append = function(data) {
 	$bottom.removeClass('elgg-infinite-scroll-ajax-loading');
 	var $list = $bottom.siblings('.elgg-list, .elgg-gallery');
 	
+	var more = false;
 	if (data) {
 		$list.append($(data).children());
 		if ($(data).children().length == $list.data('elgg-infinite-scroll-limit')) {
 			$bottom.find('.elgg-button').css('visibility', 'visible');
+			more = true;
 		}
+	}
+	if (!more) {
+		$bottom.html(elgg.echo('infinite_scroll:list_end'));
 	}
 	$bottom.find('.elgg-button').trigger('append', data);
 }
