@@ -1,6 +1,6 @@
 <?php
 /**
- * Load next page of a listing through ajax
+ * Load next page of a listing through ajax when a button clicked
  *
  * @package ElggInfiniteScroll
  */
@@ -43,6 +43,7 @@ elgg.infinite_scroll.append = function(data) {
 			$bottom.find('.elgg-button').css('visibility', 'visible');
 		}
 	}
+	$bottom.find('.elgg-button').trigger('append', data);
 }
 
 elgg.infinite_scroll.init = function() {
