@@ -7,6 +7,11 @@ if ($is_gallery = get_input('list_type')) {
 	set_input('list_type', 'list');
 }
 
+// Check this when #4723 closed.
+if ($path[0] == '') {
+	$path[0] = 'activity';
+}
+
 ob_start();
 elgg_set_viewtype('json');
 page_handler(array_shift($path), implode('/', $path));
@@ -47,6 +52,10 @@ switch(get_input('items_type')){
 	case 'river':
 		$json = $json->activity;
 		break;
+}
+
+if (!is_array($json)) {
+	exit();
 }
 
 $items = array();
