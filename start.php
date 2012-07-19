@@ -35,6 +35,10 @@ function infinite_scroll_init() {
 			elgg_register_js('elgg.infinite_scroll.automatic_pagination', $automatic_pagination_js);
 		}
 		
+		$new_items_js = elgg_get_simplecache_url('js', 'infinite_scroll/new_items');
+		elgg_register_simplecache_view('js/infinite_scroll/new_items');
+		elgg_register_js('elgg.infinite_scroll.new_items', $new_items_js);
+		
 		elgg_extend_view('navigation/pagination', 'infinite_scroll/initialize_js');
 	}
 }
