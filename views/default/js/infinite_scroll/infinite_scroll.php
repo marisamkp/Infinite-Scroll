@@ -53,7 +53,7 @@ elgg.infinite_scroll.append = function(data) {
 
 elgg.infinite_scroll.init = function() {
 	
-	// Select all paginated .elgg-list  or elgg-gallery and not into widget
+	// Select all paginated .elgg-list or .elgg-gallery witch aren't into widgets
 	$list = $('.elgg-pagination').siblings('.elgg-list, .elgg-gallery').filter(':not(.elgg-module *)')
 	
 	// Hide pagination

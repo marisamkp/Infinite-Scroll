@@ -24,8 +24,6 @@ function infinite_scroll_init() {
 		$infinite_scroll_js = elgg_get_simplecache_url('js', 'infinite_scroll/infinite_scroll');
 		elgg_register_simplecache_view('js/infinite_scroll/infinite_scroll');
 		elgg_register_js('elgg.infinite_scroll', $infinite_scroll_js);
-		
-		elgg_extend_view('navigation/pagination', 'infinite_scroll/initialize_infinite_scroll');
 
 		if (elgg_get_plugin_user_setting('pagination_type') == 'automatic') {
 			// Register javascript needed for automatic pagination
@@ -35,8 +33,8 @@ function infinite_scroll_init() {
 			$automatic_pagination_js = elgg_get_simplecache_url('js', 'infinite_scroll/automatic_pagination');
 			elgg_register_simplecache_view('js/infinite_scroll/automatic_pagination');
 			elgg_register_js('elgg.infinite_scroll.automatic_pagination', $automatic_pagination_js);
-
-			elgg_extend_view('navigation/pagination', 'infinite_scroll/initialize_automatic_pagination');
 		}
+		
+		elgg_extend_view('navigation/pagination', 'infinite_scroll/initialize_js');
 	}
 }
