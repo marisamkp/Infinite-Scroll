@@ -3,9 +3,8 @@
 $path = explode('/', $vars['path']);
 array_shift($path);
 
-if ($is_gallery = get_input('list_type')) {
-	set_input('list_type', 'list');
-}
+$list_type = get_input('list_type', 'list');
+set_input('list_type', 'list');
 
 // Check this when #4723 closed.
 if ($path[0] == '') {
@@ -86,9 +85,4 @@ foreach($json as $item) {
 	}
 }
 header('Content-type: text/plain');
-if (!$is_gallery) {
-	echo elgg_view('page/components/list', array("items" => $items));
-} else {
-	echo elgg_view('page/components/gallery', array("items" => $items));
-}
-
+echo elgg_view("page/components/$list_type", array("items" => $items));
