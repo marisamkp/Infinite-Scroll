@@ -12,6 +12,7 @@ $spanish = array(
 	'infinite_scroll:settings:pagination:button' => 'Cargar página con un botón',
 	'infinite_scroll:settings:pagination:automatic' => 'Automática al bajar por la página',
 	'infinite_scroll:load_more' => "Cargar más...",
+	'infinite_scroll:new_items' => "%s nuevos elementos",
 );
 
 add_translation("es", $spanish);

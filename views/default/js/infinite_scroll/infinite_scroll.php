@@ -6,7 +6,22 @@
  */
 ?>
 
-elgg.provide('elgg.infinite_scroll');
+elgg.provide('elgg.infinite_scroll'); 
+
+elgg.infinite_scroll.load = function($list, offset, callback) {
+	var $params = elgg.parse_str(elgg.parse_url(location.href).query);
+	$params = $.extend($params, {
+		path: elgg.parse_url(location.href).path,
+		items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
+					$list.hasClass('elgg-gallery') ? 'entity' :
+					$list.hasClass('elgg-list-river') ? 'river' :
+					$list.hasClass('elgg-list-annotation') ? 'annotation' : false,
+		offset: offset,
+	});
+	
+	var url = "/ajax/view/infinite_scroll/list?" + $.param($params);
+	elgg.get(url, callback);
+}
 
 elgg.infinite_scroll.load_next = function(event, direction) {
 	var $bottom = $(this).parent();
@@ -16,19 +31,9 @@ elgg.infinite_scroll.load_next = function(event, direction) {
 		.find('.elgg-button').css('visibility', 'hidden');
 	
 	var $list = $bottom.siblings('.elgg-list, .elgg-gallery');
-
-	var $params = elgg.parse_str(elgg.parse_url(location.href).query);
-	$params = $.extend($params, {
-		path: elgg.parse_url(location.href).path,
-		items_type: $list.hasClass('elgg-list-entity') ? 'entity' :
-					$list.hasClass('elgg-gallery') ? 'entity' :
-					$list.hasClass('elgg-list-river') ? 'river' :
-					$list.hasClass('elgg-list-annotation') ? 'annotation' : false,
-		offset: $list.children().length + (parseInt($params.offset) || 0)
-	});
+	var offset = $list.children().length;
+	elgg.infinite_scroll.load($list, offset, elgg.infinite_scroll.append);
 	
-	var url = "/ajax/view/infinite_scroll/list?" + $.param($params);
-	elgg.get(url, elgg.infinite_scroll.append);
 	return false;
 }
 

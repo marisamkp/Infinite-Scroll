@@ -12,6 +12,7 @@ $english = array(
 	'infinite_scroll:settings:pagination:button' => 'Next page with a button',
 	'infinite_scroll:settings:pagination:automatic' => 'Automatic on scroll',
 	'infinite_scroll:load_more' => "Load more...",
+	'infinite_scroll:new_items' => "%s new elements",
 );
 
 add_translation("en", $english);
